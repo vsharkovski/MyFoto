@@ -1,0 +1,30 @@
+{% extends 'base.jinja' %}
+
+{% block header %}
+<h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<p>
+    {% if g.user %}
+    Welcome, {{ g.user['first_name'] }} {{ g.user['last_name'] }}!
+    {% else %}
+    Welcome, Guest! We encourage you to register so you can create your own albums.
+    {% endif %}
+</p>
+
+<h3 class="mb-0">Top {{ top_users|length }} users by contribution:</h3>
+<div class="indented">
+    {% for user in top_users %}
+    <div class="list-item">
+        <h4>
+            <span>{{ user['first_name'] }} {{ user['last_name'] }}</span>
+            <span class="text-muted"> — score: {{ user['score'] }}</span>
+        </h4>
+        <ul>
+            <li><a href="{{ url_for('user_albums', owner_id=user['user_id']) }}">View albums</a></li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.jinja' %}
+
+{% block header %}
+<h1><a href="">{% block title %}Search Comments{% endblock %}</a></h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <form action="" method="get" class="search-form">
+        <label for="tags">Search comments containing:</label>
+        <input type="text" id="query" name="query" value="{{ query }}" required>
+        <input type="submit" value="Search" name="">
+    </form>
+</div>
+
+{% if query|length > 0 %}
+<h3 class="mb-0">Results</h3>
+{% endif %}
+
+<div class="indented">
+    {% if query|length > 0 and users|length == 0 %}
+    <p>No users found with comments containing that text.</p>
+    {% endif %}
+
+    {% for user in users %}
+    <div class="list-item">
+        <h4>
+            <span>{{ user['first_name'] }} {{ user['last_name'] }}</span>
+        </h4>
+        <ul>
+            <li><a href="{{ url_for('user_albums', owner_id=user['user_id']) }}">View albums</a></li>
+            {% if g.user %}
+            <li>
+                <form action="" method="post">
+                    <input type="text" name="friend-id" id="friend-id" value="{{ user['user_id'] }}" class="d-none">
+                    <input type="submit" value="Add friend" name="add-friend">
+                </form>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

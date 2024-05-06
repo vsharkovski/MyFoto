@@ -1,0 +1,53 @@
+{% extends 'base.jinja' %}
+
+{% block header %}
+<h1>
+    <a href="">
+        {% block title %}
+        {% if owner %}
+        {% if g.user and g.user['user_id'] == owner['user_id'] %}
+        My Albums
+        {% else %}
+        Albums by {{ owner['first_name'] }} {{ owner['last_name'] }}
+        {% endif %}
+        {% else %}
+        All Albums
+        {% endif %}
+        {% endblock %}
+    </a>
+</h1>
+{% endblock %}
+
+{% block content %}
+{% if g.user and g.user['user_id'] == owner['user_id'] %}
+<h4 class="mb-0">Create new album</h4>
+<form action="" method="post" class="indented classic-form">
+    <label for="album-name">Album name:</label>
+    <input type="text" id="album-name" name="album-name" placeholder="New album name" minlength="1" maxlength="64"
+        required><br>
+    <input type="submit" value="Create">
+</form>
+{% endif %}
+
+<h3 class="mb-0">Albums</h3>
+<div class="indented">
+    {% if albums|length == 0 %}
+        <p>No albums yet!</p>
+    {% endif %}
+    {% for album in albums %}
+    <div class="list-item">
+        <h4>
+            <span>{{ album.name }}</span>
+            <span class="text-muted"> — by {{ album['owner_first_name'] }} {{ album['owner_last_name'] }}</span>
+        </h4>
+        <ul>
+            <li><a href="{{ url_for('show_album', album_id=album.album_id) }}">View album</a></li>
+            {% if g.user and g.user['user_id'] == album['owner_id'] %}
+            <li><a href="{{ url_for('edit_album', album_id=album.album_id) }}">Edit</a></li>
+            <li><a href="{{ url_for('delete_album', album_id=album.album_id) }}">Delete</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

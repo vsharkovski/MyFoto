@@ -1,0 +1,90 @@
+{% extends 'base.jinja' %}
+
+{% block header %}
+<h1>
+    <a href="">{% block title %}Friends{% endblock %}</a>
+</h1>
+{% endblock %}
+
+{% block content %}
+<h3>My friends</h3>
+<div class="indented">
+    {% if friends|length == 0 %}
+    <p>You have no friends yet. Add some people as friends!</p>
+    {% endif %}
+    {% for user in friends %}
+    <div class="list-item">
+        <h4>
+            <span>{{ user['first_name'] }} {{ user['last_name'] }}</span>
+        </h4>
+        <ul>
+            <li><a href="{{ url_for('user_albums', owner_id=user['user_id']) }}">View albums</a></li>
+            <li>
+                <form action="" method="post">
+                    <input type="text" name="friend-id" id="friend-id" value="{{ user['user_id'] }}" class="d-none">
+                    <input type="submit" value="Remove friend" name="remove-friend">
+                </form>
+            </li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+
+<h3>Find new people</h3>
+<div class="indented">
+    <form action="" method="get" class="search-form">
+        <label for="query">Search by name:</label>
+        <input type="text" id="query" name="query" placeholder="First or last name">
+        <input type="submit" value="Search" name="">
+    </form>
+
+    {% if search_results %}
+    <h4>Results</h4>
+    <div class="indented">
+        {% if search_results|length == 0 %}
+        <p>No users found.</p>
+        {% endif %}
+        {% for user in search_results %}
+        <div class="list-item">
+            <h4>
+                <span>{{ user['first_name'] }} {{ user['last_name'] }}</span>
+            </h4>
+            <ul>
+                <li><a href="{{ url_for('user_albums', owner_id=user['user_id']) }}">View albums</a></li>
+                <li>
+                    <form action="" method="post">
+                        <input type="text" name="friend-id" id="friend-id" value="{{ user['user_id'] }}" class="d-none">
+                        <input type="submit" value="Add friend" name="add-friend">
+                    </form>
+                </li>
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<h3>People you may know</h3>
+<div class="indented">
+    {% if recommendations|length == 0 %}
+    <p>We have no recommendations for you at the moment.</p>
+    {% else %}
+    {% for user in recommendations %}
+    <div class="list-item">
+        <h4>
+            <span>{{ user['first_name'] }} {{ user['last_name'] }}</span>
+        </h4>
+        <ul>
+            <li><a href="{{ url_for('user_albums', owner_id=user['user_id']) }}">View albums</a></li>
+            <li>
+                <form action="" method="post">
+                    <input type="text" name="friend-id" id="friend-id" value="{{ user['user_id'] }}" class="d-none">
+                    <input type="submit" value="Add friend" name="add-friend">
+                </form>
+            </li>
+        </ul>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

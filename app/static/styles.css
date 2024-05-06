@@ -1,0 +1,165 @@
+body {
+  font-family: sans-serif;
+}
+
+nav {
+  background-color: lightgrey;
+  margin-bottom: 1rem;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  /* gap: 1rem; */
+  align-items: center;
+}
+
+nav ul li {
+  display: inline-block;
+}
+
+nav ul li > a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 0.75rem;
+  text-decoration: none;
+}
+
+nav ul li > a:hover {
+  background-color: #f0f0f0;
+}
+
+nav .ad {
+  font-size: 0.9rem;
+  color: #f3f3f3;
+}
+
+nav .ad a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.flash {
+  margin: 1em 0;
+  padding: 1em;
+  background: #cae6f6;
+  border: 1px solid #377ba8;
+}
+
+.ms-auto {
+  margin-inline-start: auto;
+}
+
+.me-auto {
+  margin-inline-end: auto;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.indented {
+  margin: 1rem;
+}
+
+.list-item {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.list-item ul {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.d-none {
+  display: none;
+}
+
+.photo-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.photo-list-item {
+  max-width: 30rem;
+  max-height: 70rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.photo-list-item h4 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.photo-list-item .img-container img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.photo-list-item textarea {
+  width: 95%;
+}
+
+.album-owner {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.text-muted {
+  color: rgb(100, 100, 100);
+}
+
+.item-list {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.classic-form input {
+  margin-bottom: 0.5rem;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+header h1 a {
+  text-decoration: none;
+  color: inherit;
+}

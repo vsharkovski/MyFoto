@@ -1,0 +1,89 @@
+{% extends 'base.jinja' %}
+
+{% block header %}
+<h1><a href="">{% block title %}{{ album['name'] }}{% endblock %}</a></h1>
+<div class="album-owner indented">
+    <p>Album by <span class="italic">{{ owner['first_name'] }} {{ owner['last_name'] }}</span></p>
+    <p>Created on {{ album['creation_date'] }}</p>
+    {% if g.user and g.user['user_id'] != owner['user_id'] %}
+    <form action="" method="post">
+        {% if is_friend %}
+        <input type="submit" value="Remove friend" name="remove-friend">
+        {% else %}
+        <input type="submit" value="Add friend" name="add-friend">
+        {% endif %}
+    </form>
+    {% endif %}
+    {% if g.user and g.user['user_id'] == album['owner_id'] %}
+    <li><a href="{{ url_for('edit_album', album_id=album['album_id']) }}">Edit</a></li>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<h3 class="mb-0">Photos</h3>
+<div class="photo-list indented">
+    {% for photo in photos %}
+    <div class="photo-list-item">
+        <h4>{{ photo['caption'] }}</h4>
+        <div class="img-container">
+            <img src="{{ get_photo_url(photo) }}">
+        </div>
+        {% if photo['tag_labels']|length > 0 %}
+        <div class="item-list">
+            <span class="bold">Tags:</span>
+            {% for tag_label in photo['tag_labels'] %}
+            <span>
+                {% if g.user and g.user['user_id'] == owner['user_id'] %}
+                <a href="{{ url_for('search_photos', tags=tag_label, user_id=g.user['user_id']) }}">{{ tag_label }}</a>
+                {% else %}
+                <a href="{{ url_for('search_photos', tags=tag_label) }}">{{ tag_label }}</a>
+                {% endif %}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if g.user %}
+        <form action="" method="post">
+            <input type="text" name="photo-id" id="photo-id" value="{{ photo['photo_id'] }}" class="d-none">
+            {% if photo['is_liked'] %}
+            <input type="submit" value="Unlike" name="unlike-photo">
+            {% else %}
+            <input type="submit" value="Like" name="like-photo">
+            {% endif %}
+        </form>
+        {% endif %}
+        <div class="item-list">
+            {% if photo['liked_users']|length > 0 %}
+            <span class="bold">Liked by {{ photo['liked_users']|length }}:</span>
+            {% for name in photo['liked_users'] %}
+            <span>{{ name['first_name'] }} {{ name['last_name'] }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if not g.user or g.user['user_id'] != owner['user_id'] %}
+        <form action="" method="post">
+            <input type="text" name="photo-id" id="photo-id" value="{{ photo['photo_id'] }}" class="d-none">
+            <label for="comment" class="bold">Add a comment</label>
+            <br>
+            <textarea id="comment" name="comment" rows="3" minlength="3"></textarea>
+            <input type="submit" value="Post" name="add-comment">
+        </form>
+        {% endif %}
+        <h4>Comments</h4>
+        {% if photo['comments']|length > 0 %}
+        {% for comment in photo['comments'] %}
+        <div>
+            <span class="italic">{{ comment['first_name'] }} {{ comment['last_name'] }} on {{ comment['creation_date']
+                }}:</span>
+            <br>
+            <span>{{comment['text']}}</span>
+        </div>
+        {% endfor %}
+        {% else %}
+        <span>No comments yet</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

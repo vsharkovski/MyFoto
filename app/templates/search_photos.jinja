@@ -1,0 +1,114 @@
+{% extends 'base.jinja' %}
+
+{% block header %}
+<h1><a href="">{% block title %}Search Photos{% endblock %}</a></h1>
+{% endblock %}
+
+{% block content %}
+<div class="item-list mb-3">
+    <span>Famous Tags:</span>
+    {% for tag_label in famous_tags%}
+    <span>
+        <a href="{{ url_for('search_photos', tags=tag_label) }}">{{ tag_label }}</a>
+    </span>
+    {% endfor %}
+</div>
+
+<form action="" method="get" class="search-form">
+    <label for="tags">Search by Tag:</label>
+    <!-- A-z, a-z or whitespace from start to end -->
+    <input type="text" id="tags" name="tags" placeholder="Tags (separated by spaces)" pattern="^[A-Za-z\s]+$">
+
+    <div>
+        {% if is_my_photos %}
+        <input type="radio" id="all-photos-choice" name="user_id" value="" />
+        {% else %}
+        <input type="radio" id="all-photos-choice" name="user_id" value="" checked />
+        {% endif %}
+        <label for="all-photos-choice">All Photos</label>
+    </div>
+    {% if g.user%}
+    <div>
+        {% if is_my_photos %}
+        <input type="radio" id="my-photos-choice" name="user_id" value="{{ g.user['user_id'] }}" checked />
+        {% else %}
+        <input type="radio" id="my-photos-choice" name="user_id" value="{{ g.user['user_id'] }}" />
+        {% endif %}
+        <label for="my-photos-choice">My Photos</label>
+    </div>
+    {%endif%}
+    <input type="submit" value="Search" name="">
+</form>
+
+{% if is_search %}
+<h3 class="mb-0">Results</h3>
+
+<div class="photo-list indented">
+    {% if photos|length == 0 %}
+    <p>No photos found!</p>
+    {% endif %}
+    {% for photo in photos %}
+    <div class="photo-list-item">
+        <h4>{{ photo['caption'] }}</h4>
+        <div class="img-container">
+            <img src="{{ get_photo_url(photo) }}">
+        </div>
+        {% if photo['tag_labels']|length > 0 %}
+        <div class="item-list">
+            <span class="bold">Tags:</span>
+            {% for tag_label in photo['tag_labels'] %}
+            <span>
+                {% if g.user and g.user['user_id'] == photo['owner_id'] %}
+                <a href="{{ url_for('search_photos', tags=tag_label, user_id=g.user['user_id']) }}">{{ tag_label }}</a>
+                {% else %}
+                <a href="{{ url_for('search_photos', tags=tag_label) }}">{{ tag_label }}</a>
+                {% endif %}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if g.user %}
+        <form action="" method="post">
+            <input type="text" name="photo-id" id="photo-id" value="{{ photo['photo_id'] }}" class="d-none">
+            {% if photo['is_liked'] %}
+            <input type="submit" value="Unlike" name="unlike-photo">
+            {% else %}
+            <input type="submit" value="Like" name="like-photo">
+            {% endif %}
+        </form>
+        {% endif %}
+        <div class="item-list">
+            {% if photo['liked_users']|length > 0 %}
+            <span class="bold">Liked by {{ photo['liked_users']|length }}:</span>
+            {% for name in photo['liked_users'] %}
+            <span>{{ name['first_name'] }} {{ name['last_name'] }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if not g.user or g.user['user_id'] != photo['owner_id'] %}
+        <form action="" method="post">
+            <input type="text" name="photo-id" id="photo-id" value="{{ photo['photo_id'] }}" class="d-none">
+            <label for="comment" class="bold">Add a comment</label>
+            <br>
+            <textarea id="comment" name="comment" rows="3" minlength="3"></textarea>
+            <input type="submit" value="Post" name="add-comment">
+        </form>
+        {% endif %}
+        <h4>Comments</h4>
+        {% if photo['comments']|length > 0 %}
+        {% for comment in photo['comments'] %}
+        <div>
+            <span class="italic">{{ comment['first_name'] }} {{ comment['last_name'] }} on {{ comment['creation_date']
+                }}:</span>
+            <br>
+            <span>{{comment['text']}}</span>
+        </div>
+        {% endfor %}
+        {% else %}
+        <span>No comments yet</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

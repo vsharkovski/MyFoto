@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>{% block title %}{% endblock %} - MyFoto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li>
+        <a href="{{ url_for('home') }}">Home</a>
+      </li>
+      <li>
+        <a href="{{ url_for('list_albums') }}">Albums</a>
+      </li>
+      {% if g.user %}
+      <li>
+        <a href="{{ url_for('user_albums', owner_id=g.user['user_id']) }}">My Albums</a>
+      </li>
+      {% endif %}
+      <li>
+        <a href="{{ url_for('search_photos') }}">Search</a>
+      </li>
+      {% if g.user %}
+      <li>
+        <a href="{{ url_for('recommend_photos') }}">Discover Photos</a>
+      </li>
+      <li>
+        <a href="{{ url_for('user_friends') }}">Friends</a>
+      </li>
+      {% endif %}
+      <li>
+        <a href="{{ url_for('search_comments') }}">Search Comments</a>
+      </li>
+      {% if g.user %}
+      <div class="me-auto"></div>
+      <li>
+        <span class="text-muted">{{ g.user['first_name'] }} {{ g.user['last_name']}}</span>
+      </li>
+      <li>
+        <a href="{{ url_for('logout') }}">Log Out</a>
+      </li>
+      {% else %}
+      <div class="me-auto"></div>
+      <li>
+        <a href="{{ url_for('register') }}">Register</a>
+      </li>
+      <li>
+        <a href="{{ url_for('login') }}">Login</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</body>
+
+</html>
