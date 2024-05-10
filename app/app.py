@@ -304,8 +304,8 @@ def get_friend_recommendations(user_id: int) -> list[DictRow]:
                 join friends f on my_friends.user_id = f.user1_id
                 where f.user2_id != %s
             )
-            except (
-                select user2_id as user_id
+            except all (
+                select user2_id
                 from friends
                 where user1_id = %s
             )
